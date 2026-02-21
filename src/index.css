@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap');
+
+@theme {
+  --color-game-dark: #0f172a;
+  --color-game-card: #1e293b;
+  --color-game-accent: #38bdf8;
+  --color-game-success: #4ade80;
+  --color-game-error: #f87171;
+  --color-game-primary: #818cf8;
+
+  --font-sans: "Outfit", sans-serif;
+}
+
+body {
+  background-color: var(--color-game-dark);
+  color: white;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}

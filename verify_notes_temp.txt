@@ -1,0 +1,11 @@
+const { generateProblem } = require('./src/utils/GameEngine');
+
+// Mock uuid since we are running in node and it might use browser crypto
+jest.mock('./src/utils/uuid', () => ({
+    safeUUID: () => 'test-id'
+}));
+
+// Actually we don't have jest here, so let's just make a standalone script that imports the file.
+// But GameEngine uses 'import', so we'd need babel-node or changing to commonjs.
+// Since the project is vite (module), we might be able to run it if we rename to .mjs or use a runner.
+// The simplest way is to read the file content, strip exports, and append test code, then run as a temporary script.

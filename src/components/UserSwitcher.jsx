@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Lock, ArrowRight, X } from 'lucide-react';
@@ -30,18 +31,6 @@ export default function UserSwitcher() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Auto focus pin
-    useEffect(() => {
-        if (loginProfile) {
-            const timer = setTimeout(() => {
-                if (pinInputRef.current) {
-                    pinInputRef.current.focus();
-                }
-            }, 150);
-            return () => clearTimeout(timer);
-        }
-    }, [loginProfile]);
-
     const otherProfiles = profiles.filter(p => p.id !== activeProfileId);
 
     const handleSelectClick = (profile) => {
@@ -49,9 +38,14 @@ export default function UserSwitcher() {
             selectProfile(profile.id);
             setIsOpen(false);
         } else {
-            setLoginProfile(profile);
-            setLoginPin('');
-            setLoginError(false);
+            flushSync(() => {
+                setLoginProfile(profile);
+                setLoginPin('');
+                setLoginError(false);
+            });
+            if (pinInputRef.current) {
+                pinInputRef.current.focus();
+            }
         }
     };
 

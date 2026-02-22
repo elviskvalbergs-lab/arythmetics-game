@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserPlus, User, Trash2, Lock, ArrowLeft } from 'lucide-react';
@@ -14,19 +15,6 @@ export default function ProfileSelector() {
     const [loginError, setLoginError] = useState(false);
 
     const pinInputRef = useRef(null);
-
-    // Auto focus pin
-    useEffect(() => {
-        if (loginProfile) {
-            // Delay focus slightly to allow Framer Motion animation to start
-            const timer = setTimeout(() => {
-                if (pinInputRef.current) {
-                    pinInputRef.current.focus();
-                }
-            }, 150);
-            return () => clearTimeout(timer);
-        }
-    }, [loginProfile]);
 
     const handleCreate = (e) => {
         e.preventDefault();
@@ -52,9 +40,14 @@ export default function ProfileSelector() {
             // Legacy profiles without PINs can login directly
             selectProfile(profile.id);
         } else {
-            setLoginProfile(profile);
-            setLoginPin('');
-            setLoginError(false);
+            flushSync(() => {
+                setLoginProfile(profile);
+                setLoginPin('');
+                setLoginError(false);
+            });
+            if (pinInputRef.current) {
+                pinInputRef.current.focus();
+            }
         }
     };
 

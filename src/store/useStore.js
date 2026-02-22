@@ -19,10 +19,11 @@ export const useStore = create(
             activeProfileId: null,
 
             // Actions
-            createProfile: (name) => {
+            createProfile: (name, pin) => {
                 const newProfile = {
                     id: safeUUID(),
                     name,
+                    pin: pin || '', // store 4 digit pin, empty if none
                     settings: { ...DEFAULT_SETTINGS },
                     history: [],
                     streak: 0,
@@ -36,6 +37,7 @@ export const useStore = create(
                 }));
             },
 
+            // selectProfile only sets the ID, the UI will verify the PIN before calling this
             selectProfile: (id) => set({ activeProfileId: id, gameState: 'idle' }),
 
             deleteProfile: (id) => {

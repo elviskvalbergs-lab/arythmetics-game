@@ -46,6 +46,10 @@ app.post('/api/storage/:key', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.listen(PORT, '127.0.0.1', () => {
+    console.log(`Server running on http://127.0.0.1:${PORT}`);
 });
+
+// Explicitly keep the event loop alive.
+// Node 21+ sometimes drops event loop handles when using native sqlite3 bindings, causing code 0 exits.
+setInterval(() => { }, 1000 * 60 * 60);

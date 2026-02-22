@@ -1,6 +1,7 @@
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
 import { RotateCcw, Home, Trophy } from 'lucide-react';
+import UserSwitcher from './UserSwitcher';
 
 export default function SummaryScreen() {
     const { setGameState, startGame } = useStore();
@@ -19,8 +20,12 @@ export default function SummaryScreen() {
         <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center w-full max-w-md mx-auto space-y-8 p-6 text-center pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
+            className="flex flex-col items-center justify-center w-full max-w-md mx-auto space-y-8 p-6 text-center pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] relative"
         >
+            {/* Quick User Switcher on absolute top right */}
+            <div className="absolute top-[max(1.5rem,env(safe-area-inset-top))] right-4 z-50">
+                <UserSwitcher />
+            </div>
             <div className="space-y-2">
                 <h2 className="text-3xl font-bold text-slate-300">Round Complete!</h2>
                 <h1 className="text-6xl font-black text-white drop-shadow-xl tracking-tight">

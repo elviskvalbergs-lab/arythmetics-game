@@ -1,7 +1,8 @@
 import { useStore } from '../store/useStore';
-import { Play, History, Users, Settings2, Sparkles, Brain, Zap } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Play, History, Settings2, Sparkles, Brain, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
 import clsx from 'clsx';
+import UserSwitcher from './UserSwitcher';
 
 const PRESETS = {
     beginner: { maxNumber: 10, tasksPerRound: 5, timeLimit: 0, allowedOperations: ['+', '-'], label: 'Beginner', icon: Sparkles, color: 'text-green-400' },
@@ -13,7 +14,7 @@ const PRESETS = {
 export default function ConfigPanel() {
     const settings = useStore(state => state.getSettings());
     const activeProfile = useStore(state => state.getActiveProfile());
-    const { updateSettings, startGame, setGameState, selectProfile } = useStore();
+    const { updateSettings, startGame, setGameState } = useStore();
 
     const handlePresetSelect = (key) => {
         if (key === 'custom') {
@@ -47,25 +48,17 @@ export default function ConfigPanel() {
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center w-full max-w-md mx-auto h-full space-y-6 p-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(5rem,env(safe-area-inset-bottom))]"
+            className="flex flex-col items-center w-full max-w-md mx-auto h-[100dvh] space-y-3 md:space-y-4 p-4 md:p-6 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
         >
-            <div className="w-full flex justify-between items-start">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-white drop-shadow-lg tracking-tight">
-                        Hi, {activeProfile?.name || 'Player'}!
-                    </h1>
-                    <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Let's Math!</p>
-                </div>
-                <button
-                    onClick={() => selectProfile(null)}
-                    className="p-2 bg-slate-800 rounded-xl text-slate-400 hover:text-white hover:bg-slate-700 transition"
-                >
-                    <Users size={20} />
-                </button>
+            <div className="w-full flex justify-between items-center mb-1">
+                <h1 className="text-2xl md:text-3xl font-black text-white drop-shadow-lg tracking-tight truncate mr-2">
+                    Hi, {activeProfile?.name || 'Player'}!
+                </h1>
+                <UserSwitcher />
             </div>
 
             {/* Presets Grid */}
-            <div className="grid grid-cols-2 gap-3 w-full">
+            <div className="grid grid-cols-2 gap-2 w-full">
                 {Object.entries(PRESETS).map(([key, config]) => {
                     const isActive = settings.difficultyPreset === key;
                     const Icon = config.icon;
@@ -74,16 +67,16 @@ export default function ConfigPanel() {
                             key={key}
                             onClick={() => handlePresetSelect(key)}
                             className={clsx(
-                                "p-4 rounded-2xl border-2 transition-all text-left space-y-2 flex flex-col items-start",
+                                "p-2.5 rounded-xl border-2 transition-all text-left flex items-center gap-2",
                                 isActive
-                                    ? "bg-game-card border-game-accent shadow-lg shadow-indigo-900/20"
+                                    ? "bg-game-card border-game-accent shadow-md shadow-indigo-900/20"
                                     : "bg-slate-800/50 border-transparent hover:bg-slate-800 text-slate-400 grayscale hover:grayscale-0"
                             )}
                         >
-                            <div className={clsx("p-2 rounded-lg bg-slate-900/50", config.color)}>
-                                <Icon size={20} />
+                            <div className={clsx("p-1.5 rounded-lg bg-slate-900/50 shrink-0", config.color)}>
+                                <Icon size={16} />
                             </div>
-                            <span className={clsx("text-sm font-bold", isActive ? "text-white" : "text-slate-400")}>
+                            <span className={clsx("text-sm font-bold truncate", isActive ? "text-white" : "text-slate-400")}>
                                 {config.label}
                             </span>
                         </button>
@@ -92,11 +85,11 @@ export default function ConfigPanel() {
             </div>
 
             {/* Custom/Detailed Settings Area */}
-            <div className="w-full flex-1 overflow-y-auto min-h-0 bg-game-card p-6 rounded-3xl border border-white/5 space-y-6">
+            <div className="w-full flex-1 min-h-0 bg-game-card p-4 md:p-5 rounded-3xl border border-white/5 flex flex-col justify-evenly">
 
                 {/* Operations Toggles */}
-                <div className="space-y-3">
-                    <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">Operations</label>
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Operations</label>
                     <div className="flex gap-2">
                         {['+', '-', '*', '/'].map(op => {
                             const active = settings.allowedOperations?.includes(op);
@@ -105,7 +98,7 @@ export default function ConfigPanel() {
                                     key={op}
                                     onClick={() => toggleOperation(op)}
                                     className={clsx(
-                                        "flex-1 h-12 rounded-xl text-2xl font-black transition-all border-b-4 active:border-b-0 active:translate-y-1",
+                                        "flex-1 h-10 rounded-xl text-xl font-black transition-all border-b-4 active:border-b-0 active:translate-y-1",
                                         active
                                             ? "bg-slate-700 text-white border-slate-900"
                                             : "bg-slate-800 text-slate-500 border-slate-900/50 opacity-50"
@@ -119,11 +112,11 @@ export default function ConfigPanel() {
                 </div>
 
                 {/* Sliders */}
-                <div className="space-y-6">
-                    <div className="space-y-2">
+                <div className="space-y-3.5 mt-2">
+                    <div className="space-y-1">
                         <div className="flex justify-between items-center">
-                            <label className="text-sm font-bold text-slate-400 uppercase">Number Limit</label>
-                            <span className="text-xl font-black text-game-success">{settings.maxNumber}</span>
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Number Limit</label>
+                            <span className="text-lg font-black text-game-success leading-none">{settings.maxNumber}</span>
                         </div>
                         <input
                             type="range"
@@ -131,51 +124,49 @@ export default function ConfigPanel() {
                             disabled={settings.difficultyPreset !== 'custom'}
                             value={settings.maxNumber}
                             onChange={(e) => updateSettings({ maxNumber: parseInt(e.target.value), difficultyPreset: 'custom' })}
-                            className="w-full h-2 bg-slate-700 rounded-full appearance-none cursor-pointer accent-game-success disabled:opacity-50"
+                            className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-game-success disabled:opacity-50"
                         />
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                         <div className="flex justify-between items-center">
-                            <label className="text-sm font-bold text-slate-400 uppercase">Questions</label>
-                            <span className="text-xl font-black text-game-primary">{settings.tasksPerRound}</span>
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Questions</label>
+                            <span className="text-lg font-black text-game-primary leading-none">{settings.tasksPerRound}</span>
                         </div>
                         <input
                             type="range"
                             min="5" max="50" step="5"
-                            disabled={settings.difficultyPreset !== 'custom'}
                             value={settings.tasksPerRound}
-                            onChange={(e) => updateSettings({ tasksPerRound: parseInt(e.target.value), difficultyPreset: 'custom' })}
-                            className="w-full h-2 bg-slate-700 rounded-full appearance-none cursor-pointer accent-game-primary disabled:opacity-50"
+                            onChange={(e) => updateSettings({ tasksPerRound: parseInt(e.target.value) })}
+                            className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-game-primary disabled:opacity-50"
                         />
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                         <div className="flex justify-between items-center">
-                            <label className="text-sm font-bold text-slate-400 uppercase">Timer (sec)</label>
-                            <span className="text-xl font-black text-game-error">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Timer (sec)</label>
+                            <span className="text-lg font-black text-game-error leading-none">
                                 {settings.timeLimit === 0 ? '∞' : settings.timeLimit}
                             </span>
                         </div>
                         <input
                             type="range"
                             min="0" max="60" step="5"
-                            disabled={settings.difficultyPreset !== 'custom'}
                             value={settings.timeLimit}
-                            onChange={(e) => updateSettings({ timeLimit: parseInt(e.target.value), difficultyPreset: 'custom' })}
-                            className="w-full h-2 bg-slate-700 rounded-full appearance-none cursor-pointer accent-game-error disabled:opacity-50"
+                            onChange={(e) => updateSettings({ timeLimit: parseInt(e.target.value) })}
+                            className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-game-error disabled:opacity-50"
                         />
                     </div>
                 </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 w-full">
+            <div className="flex gap-3 w-full mt-2">
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setGameState('history')}
-                    className="flex-1 py-4 bg-slate-800 rounded-2xl text-slate-400 hover:text-white transition-colors flex items-center justify-center"
+                    className="flex-shrink-0 w-14 md:w-16 bg-slate-800 rounded-2xl text-slate-400 hover:text-white transition-colors flex items-center justify-center"
                 >
                     <History size={24} />
                 </motion.button>
@@ -183,9 +174,9 @@ export default function ConfigPanel() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={startGame}
-                    className="flex-[3] py-4 bg-gradient-to-r from-game-success to-emerald-500 rounded-2xl text-xl font-black text-white shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2"
+                    className="flex-1 py-4 bg-gradient-to-r from-game-success to-emerald-500 rounded-2xl text-xl font-black text-white shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2"
                 >
-                    <Play size={28} fill="currentColor" />
+                    <Play size={24} fill="currentColor" />
                     PLAY
                 </motion.button>
             </div>

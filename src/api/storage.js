@@ -4,6 +4,11 @@ export const remoteStorage = {
             const response = await fetch(`/api/storage/${name}`);
             if (!response.ok) return null;
             const data = await response.json();
+
+            // If the database is completely empty (no rows), the API returns {}
+            // Zustand's persist middleware expects null to fallback to default state
+            if (Object.keys(data).length === 0) return null;
+
             // Zustand expects { state: ... }, which our API returns
             return data;
         } catch (e) {

@@ -15,7 +15,7 @@ export default function GameScreen() {
     const currentProblem = currentRound.problems[currentRound.currentIndex];
 
     const handleInput = (num) => {
-        if (feedback || input.length >= 2) return;
+        if (feedback || input.length >= 6) return;
         setInput(prev => prev + num);
     };
 

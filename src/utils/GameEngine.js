@@ -34,33 +34,37 @@ export const generateProblem = (settings) => {
             answer = x - y;
         }
     } else if (operator === '*') {
-        // x * y = answer
-        // Limit factors to maxNumber (usually lower for multiplication, e.g. 10 or 12)
-        // If maxNumber is high (e.g. 100), we probably want factors <= 10 or sqrt(maxNumber).
-        // For simplicity in Custom mode, let's treat maxNumber as the Factor Limit for * and /
-
-        const limit = maxNumber; // Treat as factor limit
+        // Limit one factor to maxNumber, and the other to 12 (max) for mental math
+        const limit1 = maxNumber;
+        const limit2 = Math.min(maxNumber, 12);
 
         if (!allowSimple) {
-            x = Math.floor(Math.random() * (limit - 1)) + 2; // 2..limit
-            y = Math.floor(Math.random() * (limit - 1)) + 2; // 2..limit
+            x = Math.floor(Math.random() * (limit1 - 1)) + 2; // 2..limit1
+            y = Math.floor(Math.random() * (limit2 - 1)) + 2; // 2..limit2
         } else {
-            x = Math.floor(Math.random() * (limit + 1)); // 0..limit
-            y = Math.floor(Math.random() * (limit + 1)); // 0..limit
+            x = Math.floor(Math.random() * (limit1 + 1)); // 0..limit1
+            y = Math.floor(Math.random() * (limit2 + 1)); // 0..limit2
         }
+        
+        // Randomly swap so the smaller factor isn't always second
+        if (Math.random() > 0.5) {
+            [x, y] = [y, x];
+        }
+        
         answer = x * y;
     } else if (operator === '/') {
         // x / y = answer  -> answer * y = x
         // We generate answer and y (divisor) first
-        const limit = maxNumber; // Treat as limit for answer and divisor
+        const answerLimit = maxNumber;
+        const divisorLimit = Math.min(maxNumber, 12);
 
         if (!allowSimple) {
-            answer = Math.floor(Math.random() * (limit - 1)) + 2; // 2..limit
-            y = Math.floor(Math.random() * (limit - 1)) + 2; // 2..limit (divisor > 1)
+            answer = Math.floor(Math.random() * (answerLimit - 1)) + 2; // 2..answerLimit
+            y = Math.floor(Math.random() * (divisorLimit - 1)) + 2; // 2..divisorLimit (divisor > 1)
         } else {
             // Avoid division by zero
-            y = Math.floor(Math.random() * limit) + 1; // 1..limit
-            answer = Math.floor(Math.random() * (limit + 1)); // 0..limit
+            y = Math.floor(Math.random() * divisorLimit) + 1; // 1..divisorLimit
+            answer = Math.floor(Math.random() * (answerLimit + 1)); // 0..answerLimit
         }
         x = answer * y;
     }

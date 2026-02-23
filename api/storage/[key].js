@@ -1,16 +1,7 @@
-import { Redis } from '@upstash/redis';
+import { kv } from '@vercel/kv';
 
 // Determine if we are running in Vercel or locally
 const isVercel = process.env.VERCEL === '1';
-
-// For Vercel, use @upstash/redis pointing to the KV store linked in Vercel.
-// Requires KV_REST_API_URL and KV_REST_API_TOKEN environment variables.
-const redis = isVercel
-    ? new Redis({
-        url: process.env.KV_REST_API_URL,
-        token: process.env.KV_REST_API_TOKEN,
-    })
-    : null;
 
 export default async function handler(req, res) {
     // We only run this Vercel function in actual Vercel environments.
@@ -23,7 +14,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         try {
-            const data = await redis.get(key);
+            const data = await kv.get(key);
             res.status(200).json(data || {});
         } catch (err) {
             console.error(err);
@@ -31,7 +22,7 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'POST') {
         try {
-            await redis.set(key, req.body);
+            await kv.set(key, req.body);
             res.status(200).json({ success: true });
         } catch (err) {
             console.error(err);

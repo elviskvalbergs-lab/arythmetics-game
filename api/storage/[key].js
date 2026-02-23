@@ -1,15 +1,6 @@
 import { kv } from '@vercel/kv';
 
-// Determine if we are running in Vercel or locally
-const isVercel = process.env.VERCEL === '1';
-
 export default async function handler(req, res) {
-    // We only run this Vercel function in actual Vercel environments.
-    // Locally, Vite's proxy forwards `/api` directly to `server/index.js` (Express + SQLite).
-    if (!isVercel) {
-        return res.status(500).json({ error: "This serverless function is only meant to run on Vercel." });
-    }
-
     const { key } = req.query;
 
     if (req.method === 'GET') {

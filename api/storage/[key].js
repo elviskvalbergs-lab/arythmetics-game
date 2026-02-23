@@ -8,16 +8,16 @@ export default async function handler(req, res) {
             const data = await kv.get(key);
             res.status(200).json(data || {});
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: err.message });
+            console.error("GET Error:", err);
+            res.status(500).json({ error: err?.message || String(err), stack: err?.stack });
         }
     } else if (req.method === 'POST') {
         try {
             await kv.set(key, req.body);
             res.status(200).json({ success: true });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: err.message });
+            console.error("POST Error:", err);
+            res.status(500).json({ error: err?.message || String(err) });
         }
     } else {
         res.setHeader('Allow', ['GET', 'POST']);

@@ -59,7 +59,7 @@ export default function SummaryScreen() {
                 </motion.div>
             )}
 
-            <div className="flex flex-col w-full space-y-4">
+            <div className="flex flex-col w-full space-y-3">
                 <button
                     onClick={startGame}
                     className="w-full py-5 bg-game-primary rounded-2xl text-2xl font-bold text-white shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-3"
@@ -69,10 +69,18 @@ export default function SummaryScreen() {
                 </button>
 
                 <button
-                    onClick={() => setGameState('idle')}
-                    className="w-full py-4 bg-slate-800 rounded-2xl text-lg font-bold text-slate-400 hover:text-white active:scale-95 transition-all flex items-center justify-center gap-2"
+                    onClick={() => setGameState('history')}
+                    className="w-full py-4 bg-slate-800 rounded-2xl text-lg font-bold text-white hover:bg-slate-700 shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
-                    <Home size={24} />
+                    <Trophy size={24} />
+                    See Results
+                </button>
+
+                <button
+                    onClick={() => setGameState('idle')}
+                    className="w-full py-3 bg-transparent border border-white/5 rounded-2xl text-base font-bold text-slate-500 hover:text-white active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                    <Home size={20} />
                     Back to Menu
                 </button>
             </div>

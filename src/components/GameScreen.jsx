@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X } from 'lucide-react';
@@ -10,6 +10,8 @@ export default function GameScreen() {
     const { currentRound, submitAnswer } = useStore();
 
     const [input, setInput] = useState('');
+    const inputRef = useRef(input);
+    inputRef.current = input;
     const [feedback, setFeedback] = useState(null); // 'correct' | 'incorrect'
 
     const currentProblem = currentRound.problems[currentRound.currentIndex];
@@ -55,9 +57,11 @@ export default function GameScreen() {
         if (timeLeft === null || feedback) return;
 
         if (timeLeft <= 0) {
-            setFeedback('incorrect');
+            const finalInput = inputRef.current || '-1';
+            const isCorrect = parseInt(finalInput) === currentProblem.answer;
+            setFeedback(isCorrect ? 'correct' : 'incorrect');
             setTimeout(() => {
-                submitAnswer('-1');
+                submitAnswer(finalInput);
                 setInput('');
                 setFeedback(null);
                 if (settings.timeLimit > 0) setTimeLeft(settings.timeLimit);
@@ -70,7 +74,7 @@ export default function GameScreen() {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [timeLeft, feedback, submitAnswer, settings]);
+    }, [timeLeft, feedback, submitAnswer, settings, currentProblem.answer]);
 
     return (
         <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto h-[100dvh] p-4 relative pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">

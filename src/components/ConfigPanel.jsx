@@ -166,9 +166,10 @@ export default function ConfigPanel() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setGameState('history')}
-                    className="flex-shrink-0 w-14 md:w-16 bg-slate-800 rounded-2xl text-slate-400 hover:text-white transition-colors flex items-center justify-center"
+                    className="flex-shrink-0 px-4 md:px-5 bg-slate-800 rounded-2xl text-slate-400 hover:text-white transition-colors flex flex-col items-center justify-center gap-1"
                 >
-                    <History size={24} />
+                    <History size={20} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest leading-none">Scores</span>
                 </motion.button>
                 <motion.button
                     whileHover={{ scale: 1.02 }}

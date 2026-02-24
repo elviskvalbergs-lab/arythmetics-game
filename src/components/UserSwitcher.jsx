@@ -95,16 +95,16 @@ export default function UserSwitcher() {
                             </button>
                         </div>
 
-                        <div className="max-h-60 overflow-y-auto">
-                            <AnimatePresence mode="wait">
+                        <div className="max-h-60 overflow-y-auto grid grid-cols-1 overflow-x-hidden">
+                            <AnimatePresence>
                                 {loginProfile ? (
                                     <motion.form
                                         key="pin-form"
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: -20 }}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
                                         onSubmit={handleLoginSubmit}
-                                        className="p-4 flex flex-col items-center gap-4"
+                                        className="col-start-1 row-start-1 p-4 flex flex-col items-center gap-4 w-full"
                                     >
                                         <div className="flex items-center gap-3 w-full border-b border-slate-700 pb-3">
                                             <div className="w-10 h-10 bg-gradient-to-br from-game-primary to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner">
@@ -150,7 +150,13 @@ export default function UserSwitcher() {
                                         </div>
                                     </motion.form>
                                 ) : (
-                                    <motion.div key="user-list" className="flex flex-col">
+                                    <motion.div
+                                        key="user-list"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0, filter: "blur(4px)" }}
+                                        className="col-start-1 row-start-1 flex flex-col w-full"
+                                    >
                                         {otherProfiles.length === 0 && (
                                             <div className="p-4 text-center text-sm text-slate-500 font-bold">
                                                 No other profiles found.

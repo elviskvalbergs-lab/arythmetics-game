@@ -62,16 +62,16 @@ export default function ProfileSelector() {
                 </p>
             </div>
 
-            <div className="w-full max-w-sm space-y-4">
-                <AnimatePresence mode='wait'>
+            <div className="w-full max-w-sm grid grid-cols-1">
+                <AnimatePresence>
                     {loginProfile ? (
                         <motion.form
                             key="login-form"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
                             onSubmit={handleLoginSubmit}
-                            className="p-6 bg-game-card rounded-3xl border border-white/5 space-y-6 shadow-xl flex flex-col items-center"
+                            className="col-start-1 row-start-1 p-6 bg-game-card rounded-3xl border border-white/5 space-y-6 shadow-xl flex flex-col items-center"
                         >
                             <div className="w-20 h-20 bg-gradient-to-br from-game-primary to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-4xl shadow-inner mb-2">
                                 {loginProfile.name[0].toUpperCase()}
@@ -116,11 +116,11 @@ export default function ProfileSelector() {
                     ) : isCreating ? (
                         <motion.form
                             key="create-form"
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
                             onSubmit={handleCreate}
-                            className="p-6 bg-game-card rounded-3xl border border-white/5 space-y-4 shadow-xl"
+                            className="col-start-1 row-start-1 p-6 bg-game-card rounded-3xl border border-white/5 space-y-4 shadow-xl"
                         >
                             <div className="space-y-4">
                                 <div>
@@ -168,7 +168,13 @@ export default function ProfileSelector() {
                             </div>
                         </motion.form>
                     ) : (
-                        <motion.div key="list" className="space-y-4">
+                        <motion.div
+                            key="list"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0, filter: "blur(4px)" }}
+                            className="col-start-1 row-start-1 space-y-4 w-full"
+                        >
                             {profiles.map(profile => (
                                 <motion.div
                                     key={profile.id}

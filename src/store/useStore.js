@@ -228,7 +228,7 @@ export const useStore = create(
                 },
                 removeItem: () => { }
             },
-            partialize: (state) => ({ profiles: state.profiles, activeProfileId: state.activeProfileId }),
+            partialize: (state) => ({ profiles: state.profiles }),
         }
     )
 );

@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Lock, ArrowRight, X } from 'lucide-react';
+import { getLevelInfo } from '../utils/leveling';
 import clsx from 'clsx';
 
 export default function UserSwitcher() {
@@ -178,8 +179,9 @@ export default function UserSwitcher() {
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="font-bold text-white leading-tight">{profile.name}</div>
-                                                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wide">
-                                                        Lv {Math.floor((profile.totalSolved || 0) / 50) + 1}
+                                                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wide flex flex-col mt-0.5">
+                                                        <span>Lv {getLevelInfo(profile).level}</span>
+                                                        <span className="text-[9px] text-slate-500 lowercase normal-case">{getLevelInfo(profile).pointsNeeded} pts to next</span>
                                                     </div>
                                                 </div>
                                                 <ArrowRight size={16} className="text-slate-600" />

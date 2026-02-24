@@ -29,6 +29,7 @@ export const useStore = create(
                     streak: 0,
                     lastPlayedDate: null,
                     totalSolved: 0,
+                    totalCorrect: 0,
                 };
                 set(state => ({
                     profiles: [...state.profiles, newProfile],
@@ -189,7 +190,8 @@ export const useStore = create(
                                         ...p,
                                         streak: newStreak,
                                         lastPlayedDate: Date.now(),
-                                        totalSolved: (p.totalSolved || 0) + settings.tasksPerRound
+                                        totalSolved: (p.totalSolved || 0) + settings.tasksPerRound,
+                                        totalCorrect: (p.totalCorrect || 0) + correctCount
                                     }
                                     : p
                             )

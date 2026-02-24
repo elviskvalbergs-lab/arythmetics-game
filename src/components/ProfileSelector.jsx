@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserPlus, User, Trash2, Lock, ArrowLeft } from 'lucide-react';
+import { getLevelInfo } from '../utils/leveling';
 
 export default function ProfileSelector() {
     const { profiles, createProfile, selectProfile, deleteProfile } = useStore();
@@ -197,14 +198,24 @@ export default function ProfileSelector() {
                                         </div>
                                         <div className="flex-1 text-left">
                                             <h3 className="text-xl font-bold text-white mb-1">{profile.name}</h3>
-                                            <div className="flex gap-3 text-xs font-bold uppercase tracking-wide opacity-80">
-                                                <span className="text-purple-300">
-                                                    Level {Math.floor((profile.totalSolved || 0) / 50) + 1}
-                                                </span>
-                                                <span className="text-orange-300">
-                                                    🔥 {profile.streak || 0} Streak
-                                                </span>
-                                            </div>
+                                            {(() => {
+                                                const { level, pointsNeeded } = getLevelInfo(profile);
+                                                return (
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="flex gap-3 text-xs font-bold uppercase tracking-wide opacity-80">
+                                                            <span className="text-purple-300">
+                                                                Level {level}
+                                                            </span>
+                                                            <span className="text-orange-300">
+                                                                🔥 {profile.streak || 0} Streak
+                                                            </span>
+                                                        </div>
+                                                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                                                            {pointsNeeded} correct answers to Level {level + 1}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })()}
                                         </div>
                                     </button>
 

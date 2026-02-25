@@ -3,7 +3,7 @@ import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Trash2, ChevronDown, ChevronUp, AlertCircle, Calendar } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { format, isSameDay, isSameWeek, isSameMonth, subDays, isSameYear } from 'date-fns'; // Wait, I removed date-fns. I should restore it or implement custom helpers. Let's do custom helpers to keep deps low.
+import { getLevelInfo } from '../utils/leveling';
 
 // --- Helper Date Functions ---
 const isToday = (date) => {
@@ -118,10 +118,20 @@ export default function Scoreboard() {
                 <div className="w-px h-10 bg-white/10" />
                 <div className="text-center">
                     <div className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Level</div>
-                    <div className="text-2xl font-black text-purple-400 flex items-center gap-1 justify-center">
-                        <span className="text-purple-500">⭐</span>
-                        {Math.floor((useStore(state => state.getActiveProfile()?.totalSolved || 0) / 50) + 1)}
-                    </div>
+                    {(() => {
+                        const profile = useStore(state => state.getActiveProfile());
+                        if (!profile) return null;
+                        const { level, pointsNeeded } = getLevelInfo(profile);
+                        return (
+                            <div className="flex flex-col items-center justify-center">
+                                <div className="text-2xl font-black text-purple-400 flex items-center gap-1 justify-center">
+                                    <span className="text-purple-500">⭐</span>
+                                    {level}
+                                </div>
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">{pointsNeeded} pts to next</span>
+                            </div>
+                        );
+                    })()}
                 </div>
             </div>
 

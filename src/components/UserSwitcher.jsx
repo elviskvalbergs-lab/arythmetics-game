@@ -186,7 +186,6 @@ export default function UserSwitcher() {
                                                     <div className="font-bold text-white leading-tight">{profile.name}</div>
                                                     <div className="text-xs text-slate-400 font-bold uppercase tracking-wide flex flex-col mt-0.5">
                                                         <span>Lv {getLevelInfo(profile).level}</span>
-                                                        <span className="text-[9px] text-slate-500 lowercase normal-case">{getLevelInfo(profile).pointsNeeded} pts to next</span>
                                                     </div>
                                                 </div>
                                                 <ArrowRight size={16} className="text-slate-600" />

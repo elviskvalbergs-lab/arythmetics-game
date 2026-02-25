@@ -6,7 +6,7 @@ import { UserPlus, User, Trash2, Lock, ArrowLeft, ShieldAlert } from 'lucide-rea
 import { getLevelInfo } from '../utils/leveling';
 
 export default function ProfileSelector() {
-    const { profiles, createProfile, selectProfile, deleteProfile } = useStore();
+    const { profiles, createProfile, selectProfile, deleteProfile, setGameState } = useStore();
     const [isCreating, setIsCreating] = useState(false);
     const [newName, setNewName] = useState('');
     const [newPin, setNewPin] = useState('');
@@ -209,7 +209,7 @@ export default function ProfileSelector() {
                                         <div className="flex-1 text-left">
                                             <h3 className="text-xl font-bold text-white mb-1">{profile.name}</h3>
                                             {(() => {
-                                                const { level, pointsNeeded } = getLevelInfo(profile);
+                                                const { level } = getLevelInfo(profile);
                                                 return (
                                                     <div className="flex flex-col gap-1">
                                                         <div className="flex gap-3 text-xs font-bold uppercase tracking-wide opacity-80">
@@ -220,9 +220,6 @@ export default function ProfileSelector() {
                                                                 🔥 {profile.streak || 0} Streak
                                                             </span>
                                                         </div>
-                                                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-                                                            {pointsNeeded} correct answers to Level {level + 1}
-                                                        </span>
                                                     </div>
                                                 );
                                             })()}

@@ -1,8 +1,8 @@
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
-import { RotateCcw, Home, Trophy } from 'lucide-react';
+import { RotateCcw, Home, Trophy, Star } from 'lucide-react';
 import UserSwitcher from './UserSwitcher';
-
+import { getLevelInfo } from '../utils/leveling';
 export default function SummaryScreen() {
     const { setGameState, startGame } = useStore();
     const history = useStore(state => {
@@ -33,16 +33,40 @@ export default function SummaryScreen() {
                 </h1>
             </div>
 
-            <div className="w-full bg-game-card rounded-3xl p-8 space-y-6 border border-white/5">
-                <div className="space-y-1">
-                    <p className="text-slate-400 font-medium text-sm uppercase tracking-wide">Accuracy</p>
-                    <div className="text-4xl font-black text-game-accent">{accuracy}%</div>
-                </div>
+            <div className="w-full bg-game-card rounded-3xl p-6 md:p-8 space-y-6 border border-white/5 shadow-2xl">
+                {/* Level Progress Section */}
+                {(() => {
+                    const profile = useStore(state => state.getActiveProfile());
+                    if (!profile) return null;
+                    const { level, pointsNeeded } = getLevelInfo(profile);
+                    const pointsEarned = lastRound.correct;
 
-                <div className="space-y-1">
-                    <p className="text-slate-400 font-medium text-sm uppercase tracking-wide">Avg Speed</p>
-                    <div className="text-4xl font-black text-game-warning text-yellow-500">
-                        {lastRound.avgTime.toFixed(1)}s
+                    return (
+                        <div className="py-4 border-b border-white/10 flex flex-col items-center justify-center gap-2 mb-2">
+                            <div className="flex items-center gap-2 text-purple-400">
+                                <Star className="fill-purple-500" size={24} />
+                                <span className="text-2xl font-black">Level {level}</span>
+                            </div>
+
+                            <div className="flex flex-col items-center gap-1 mt-1">
+                                <span className="text-game-success font-bold text-lg">+{pointsEarned} Points Earned!</span>
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-widest">{pointsNeeded} pts to next level</span>
+                            </div>
+                        </div>
+                    );
+                })()}
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                        <p className="text-slate-400 font-medium text-xs uppercase tracking-wide">Accuracy</p>
+                        <div className="text-3xl font-black text-game-accent">{accuracy}%</div>
+                    </div>
+
+                    <div className="space-y-1">
+                        <p className="text-slate-400 font-medium text-xs uppercase tracking-wide">Avg Speed</p>
+                        <div className="text-3xl font-black text-game-warning text-yellow-500">
+                            {lastRound.avgTime.toFixed(1)}s
+                        </div>
                     </div>
                 </div>
             </div>

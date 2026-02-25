@@ -56,9 +56,17 @@ export default function ConfigPanel() {
                     <h1 className="text-2xl md:text-3xl font-black text-white drop-shadow-lg tracking-tight truncate mr-2">
                         Hi, {activeProfile?.name || 'Player'}!
                     </h1>
-                    {activeProfile && (
-                        <span className="text-sm font-bold text-game-accent uppercase tracking-wider">Level {getLevelInfo(activeProfile).level}</span>
-                    )}
+                    {activeProfile && (() => {
+                        const { level, pointsNeeded } = getLevelInfo(activeProfile);
+                        return (
+                            <div className="flex flex-col">
+                                <span className="text-sm font-bold text-game-accent uppercase tracking-wider">Level {level}</span>
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                                    {pointsNeeded} correct answers to Level {level + 1}
+                                </span>
+                            </div>
+                        );
+                    })()}
                 </div>
                 <UserSwitcher />
             </div>

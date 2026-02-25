@@ -195,7 +195,10 @@ export const useStore = create(
                                         streak: newStreak,
                                         lastPlayedDate: Date.now(),
                                         totalSolved: (p.totalSolved || 0) + settings.tasksPerRound,
-                                        totalCorrect: (p.totalCorrect || 0) + correctCount
+                                        totalCorrect: (p.totalCorrect !== undefined
+                                            ? p.totalCorrect
+                                            : (p.history?.reduce((sum, r) => sum + (r.correct || 0), 0) || 0)
+                                        ) + correctCount
                                     }
                                     : p
                             )

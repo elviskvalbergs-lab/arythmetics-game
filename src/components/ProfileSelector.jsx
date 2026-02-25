@@ -90,7 +90,12 @@ export default function ProfileSelector() {
                                     setLoginPin(e.target.value.replace(/[^0-9]/g, ''));
                                     setLoginError(false);
                                 }}
-                                className={`w-32 bg-slate-900/50 text-4xl font-black text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-game-primary text-center py-3 rounded-2xl tracking-[0.5em] transition-all ${loginError ? 'ring-2 ring-game-error border-game-error bg-red-900/20' : 'border border-slate-700'}`}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && loginPin.length === 4) {
+                                        handleLoginSubmit(e);
+                                    }
+                                }}
+                                className={`w-40 bg-slate-900/50 text-4xl font-black text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-game-primary text-center py-3 rounded-2xl tracking-[0.2em] transition-all ${loginError ? 'ring-2 ring-game-error border-game-error bg-red-900/20' : 'border border-slate-700'}`}
                             />
 
                             {loginError && <p className="text-game-error text-sm font-bold animate-pulse">Incorrect PIN</p>}
@@ -145,7 +150,12 @@ export default function ProfileSelector() {
                                         placeholder="****"
                                         value={newPin}
                                         onChange={(e) => setNewPin(e.target.value.replace(/[^0-9]/g, ''))}
-                                        className="w-full mt-1 bg-slate-900/50 text-2xl font-black text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-game-primary px-4 py-3 rounded-xl border border-slate-700 tracking-widest"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && newName.trim() && newPin.length === 4) {
+                                                handleCreate(e);
+                                            }
+                                        }}
+                                        className="w-full mt-1 bg-slate-900/50 text-2xl font-black text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-game-primary px-4 py-3 rounded-xl border border-slate-700 tracking-[0.2em]"
                                         maxLength={4}
                                     />
                                     <p className="text-xs text-slate-500 mt-2 ml-1">Pin is required so siblings don't mess up your score!</p>

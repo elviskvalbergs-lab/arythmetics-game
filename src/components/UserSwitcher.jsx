@@ -126,8 +126,13 @@ export default function UserSwitcher() {
                                                 setLoginPin(e.target.value.replace(/[^0-9]/g, ''));
                                                 setLoginError(false);
                                             }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && loginPin.length === 4) {
+                                                    handleLoginSubmit(e);
+                                                }
+                                            }}
                                             className={clsx(
-                                                "w-full bg-slate-900 text-2xl font-black text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-game-primary text-center py-2 rounded-xl tracking-widest transition-all",
+                                                "w-full bg-slate-900 text-2xl font-black text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-game-primary text-center py-2 rounded-xl tracking-[0.2em] transition-all",
                                                 loginError ? "ring-2 ring-game-error border-game-error bg-red-900/20" : "border border-slate-700"
                                             )}
                                         />

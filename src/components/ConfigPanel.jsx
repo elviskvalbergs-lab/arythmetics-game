@@ -3,6 +3,7 @@ import { Play, History, Settings2, Sparkles, Brain, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import UserSwitcher from './UserSwitcher';
+import { getLevelInfo } from '../utils/leveling';
 
 const PRESETS = {
     beginner: { maxNumber: 10, tasksPerRound: 5, timeLimit: 0, allowedOperations: ['+', '-'], label: 'Beginner', icon: Sparkles, color: 'text-green-400' },
@@ -50,10 +51,15 @@ export default function ConfigPanel() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center w-full max-w-md mx-auto h-[100dvh] space-y-3 md:space-y-4 p-4 md:p-6 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
         >
-            <div className="w-full flex justify-between items-center mb-1">
-                <h1 className="text-2xl md:text-3xl font-black text-white drop-shadow-lg tracking-tight truncate mr-2">
-                    Hi, {activeProfile?.name || 'Player'}!
-                </h1>
+            <div className="w-full flex justify-between items-start mb-1">
+                <div className="flex flex-col">
+                    <h1 className="text-2xl md:text-3xl font-black text-white drop-shadow-lg tracking-tight truncate mr-2">
+                        Hi, {activeProfile?.name || 'Player'}!
+                    </h1>
+                    {activeProfile && (
+                        <span className="text-sm font-bold text-game-accent uppercase tracking-wider">Level {getLevelInfo(activeProfile).level}</span>
+                    )}
+                </div>
                 <UserSwitcher />
             </div>
 

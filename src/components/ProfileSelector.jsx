@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserPlus, User, Trash2, Lock, ArrowLeft } from 'lucide-react';
+import { UserPlus, User, Trash2, Lock, ArrowLeft, ShieldAlert } from 'lucide-react';
 import { getLevelInfo } from '../utils/leveling';
 
 export default function ProfileSelector() {
@@ -253,6 +253,17 @@ export default function ProfileSelector() {
                     )}
                 </AnimatePresence>
             </div>
+
+            {/* Admin Stealth Button */}
+            {!loginProfile && !isCreating && (
+                <button
+                    onClick={() => setGameState('admin_login')}
+                    className="absolute bottom-4 right-4 p-3 text-slate-700 hover:text-game-primary rounded-full hover:bg-slate-800 transition-all opacity-50 hover:opacity-100"
+                    title="Admin Access"
+                >
+                    <ShieldAlert size={20} />
+                </button>
+            )}
         </div>
     );
 }

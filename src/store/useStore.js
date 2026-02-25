@@ -104,8 +104,12 @@ export const useStore = create(
                 }),
 
             // Game State (Global is fine, or reset on profile switch)
-            gameState: 'idle',
+            gameState: 'idle', // 'idle', 'playing', 'summary', 'history', 'admin_login', 'admin_dashboard'
             setGameState: (state) => set({ gameState: state }),
+
+            // Admin State
+            isAdmin: false,
+            setAdmin: (status) => set({ isAdmin: status }),
 
             currentRound: {
                 problems: [],

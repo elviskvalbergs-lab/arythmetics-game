@@ -226,17 +226,6 @@ export default function ProfileSelector() {
                                         </div>
                                     </button>
 
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (confirm(`Delete profile "${profile.name}"? This cannot be undone.`)) {
-                                                deleteProfile(profile.id);
-                                            }
-                                        }}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-700 hover:text-game-error transition-colors"
-                                    >
-                                        <Trash2 size={24} />
-                                    </button>
                                 </motion.div>
                             ))}
                             <button

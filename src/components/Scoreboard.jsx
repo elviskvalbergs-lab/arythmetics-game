@@ -4,38 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Trash2, ChevronDown, ChevronUp, AlertCircle, Calendar } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { getLevelInfo } from '../utils/leveling';
+import { isToday, isThisWeek, isThisMonth, isThisYear } from '../utils/dates';
 
-// --- Helper Date Functions ---
-const isToday = (date) => {
-    const today = new Date();
-    return date.getDate() === today.getDate() &&
-        date.getMonth() === today.getMonth() &&
-        date.getFullYear() === today.getFullYear();
-};
 
-const getStartOfWeek = (d) => {
-    const date = new Date(d);
-    const day = date.getDay();
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-    return new Date(date.setDate(diff));
-};
-
-const isThisWeek = (date) => {
-    const today = new Date();
-    const firstDay = getStartOfWeek(today);
-    return date >= firstDay;
-};
-
-const isThisMonth = (date) => {
-    const today = new Date();
-    return date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
-};
-
-const isThisYear = (date) => {
-    const today = new Date();
-    return date.getFullYear() === today.getFullYear();
-};
-// -----------------------------
 
 export default function Scoreboard() {
     const history = useStore(state => state.getHistory());

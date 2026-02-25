@@ -241,7 +241,7 @@ export default function ProfileSelector() {
             </div>
 
             {/* Admin Stealth Button */}
-            {!loginProfile && !isCreating && (
+            {!isCreating && (
                 <button
                     onClick={() => setGameState('admin_login')}
                     className="absolute bottom-4 right-4 p-3 text-slate-700 hover:text-game-primary rounded-full hover:bg-slate-800 transition-all opacity-50 hover:opacity-100"

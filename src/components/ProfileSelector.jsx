@@ -239,9 +239,9 @@ export default function ProfileSelector() {
                                         >
                                             <button
                                                 onClick={() => handleSelectProfileClick(profile)}
-                                                className="w-full h-full text-left bg-slate-800 rounded-xl p-3 transition-all border border-white/5 hover:border-game-primary/50 flex items-center gap-3 group shadow-sm"
+                                                className="w-full h-full text-left bg-slate-800 rounded-xl p-2 sm:p-3 transition-all border border-white/5 hover:border-game-primary/50 flex items-center gap-2 sm:gap-3 group shadow-sm"
                                             >
-                                                <div className="w-10 h-10 bg-gradient-to-br from-game-primary to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner relative shrink-0">
+                                                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-game-primary to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg shadow-inner relative shrink-0">
                                                     {profile.name[0].toUpperCase()}
                                                     {profile.pin && (
                                                         <div className="absolute -bottom-1 -right-1 bg-slate-800 rounded-full p-0.5 border border-slate-800">
@@ -250,11 +250,11 @@ export default function ProfileSelector() {
                                                     )}
                                                 </div>
                                                 <div className="flex-1 text-left min-w-0">
-                                                    <h3 className="text-base font-bold text-white mb-0.5 truncate leading-tight">{profile.name}</h3>
+                                                    <h3 className="text-sm sm:text-base font-bold text-white mb-0.5 truncate leading-tight">{profile.name}</h3>
                                                     {(() => {
                                                         const { level } = getLevelInfo(profile);
                                                         return (
-                                                            <div className="flex gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-wide opacity-80 truncate">
+                                                            <div className="flex gap-1.5 sm:gap-2 text-[9px] sm:text-[11px] font-bold uppercase tracking-wide opacity-80 truncate">
                                                                 <span className="text-purple-300">Level {level}</span>
                                                                 <span className="text-slate-500">•</span>
                                                                 <span className="text-orange-300">🔥 {profile.streak || 0}</span>

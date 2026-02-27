@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Lock, ArrowRight, X } from 'lucide-react';
+import { Users, Lock, ArrowRight, X, Search } from 'lucide-react';
 import { getLevelInfo } from '../utils/leveling';
 import clsx from 'clsx';
 
@@ -11,6 +11,7 @@ export default function UserSwitcher() {
     const activeProfile = profiles.find(p => p.id === activeProfileId);
 
     const [isOpen, setIsOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const [loginProfile, setLoginProfile] = useState(null);
     const [loginPin, setLoginPin] = useState('');
     const [loginError, setLoginError] = useState(false);
@@ -33,6 +34,12 @@ export default function UserSwitcher() {
     }, []);
 
     const otherProfiles = profiles.filter(p => p.id !== activeProfileId);
+
+    const filteredProfiles = useMemo(() => {
+        if (!searchQuery.trim()) return otherProfiles;
+        const query = searchQuery.toLowerCase();
+        return otherProfiles.filter(p => p.name.toLowerCase().includes(query));
+    }, [otherProfiles, searchQuery]);
 
     const handleSelectClick = (profile) => {
         if (!profile.pin) {
@@ -69,7 +76,10 @@ export default function UserSwitcher() {
             <button
                 onClick={() => {
                     setIsOpen(!isOpen);
-                    if (isOpen) setLoginProfile(null);
+                    if (isOpen) {
+                        setLoginProfile(null);
+                        setSearchQuery('');
+                    }
                 }}
                 className="flex items-center gap-2 p-2 bg-slate-800 rounded-2xl hover:bg-slate-700 transition-colors shadow-sm"
             >
@@ -87,16 +97,33 @@ export default function UserSwitcher() {
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
                         className="absolute right-0 top-[calc(100%+0.5rem)] w-64 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50 flex flex-col"
                     >
-                        <div className="p-3 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
-                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider pl-1">
-                                {loginProfile ? 'Enter PIN' : 'Switch Player'}
-                            </span>
-                            <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white transition">
-                                <X size={16} />
-                            </button>
+                        <div className="p-3 bg-slate-900 border-b border-slate-700 flex flex-col gap-3">
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider pl-1">
+                                    {loginProfile ? 'Enter PIN' : 'Switch Player'}
+                                </span>
+                                <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white transition">
+                                    <X size={16} />
+                                </button>
+                            </div>
+
+                            {!loginProfile && otherProfiles.length > 0 && (
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                                        <Search size={14} className="text-slate-500" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full pl-8 pr-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:border-game-primary focus:ring-1 focus:ring-game-primary transition-colors"
+                                    />
+                                </div>
+                            )}
                         </div>
 
-                        <div className="max-h-60 overflow-y-auto grid grid-cols-1 overflow-x-hidden">
+                        <div className="max-h-[60vh] overflow-y-auto grid grid-cols-1 overflow-x-hidden scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
                             <AnimatePresence>
                                 {loginProfile ? (
                                     <motion.form
@@ -163,12 +190,12 @@ export default function UserSwitcher() {
                                         exit={{ opacity: 0, filter: "blur(4px)" }}
                                         className="col-start-1 row-start-1 flex flex-col w-full"
                                     >
-                                        {otherProfiles.length === 0 && (
+                                        {filteredProfiles.length === 0 && (
                                             <div className="p-4 text-center text-sm text-slate-500 font-bold">
-                                                No other profiles found.
+                                                No profiles found.
                                             </div>
                                         )}
-                                        {otherProfiles.map(profile => (
+                                        {filteredProfiles.map(profile => (
                                             <button
                                                 key={profile.id}
                                                 onClick={() => handleSelectClick(profile)}

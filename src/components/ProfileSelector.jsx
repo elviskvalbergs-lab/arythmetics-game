@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserPlus, User, Trash2, Lock, ArrowLeft, ShieldAlert } from 'lucide-react';
+import { UserPlus, User, Trash2, Lock, ArrowLeft, ShieldAlert, Search } from 'lucide-react';
 import { getLevelInfo } from '../utils/leveling';
 
 export default function ProfileSelector() {
@@ -10,12 +10,19 @@ export default function ProfileSelector() {
     const [isCreating, setIsCreating] = useState(false);
     const [newName, setNewName] = useState('');
     const [newPin, setNewPin] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [loginProfile, setLoginProfile] = useState(null); // The profile the user wants to log into
     const [loginPin, setLoginPin] = useState('');
     const [loginError, setLoginError] = useState(false);
 
     const pinInputRef = useRef(null);
+
+    const filteredProfiles = useMemo(() => {
+        if (!searchQuery.trim()) return profiles;
+        const query = searchQuery.toLowerCase();
+        return profiles.filter(p => p.name.toLowerCase().includes(query));
+    }, [profiles, searchQuery]);
 
     const handleCreate = (e) => {
         e.preventDefault();
@@ -53,12 +60,12 @@ export default function ProfileSelector() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-[100dvh] p-6 space-y-8 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
-            <div className="text-center space-y-2">
-                <h1 className="text-4xl font-black text-game-primary drop-shadow-lg">
+        <div className="flex flex-col items-center justify-start w-full h-[100dvh] p-4 sm:p-6 space-y-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] overflow-y-auto">
+            <div className="text-center space-y-1 shrink-0 mt-4">
+                <h1 className="text-3xl font-black text-game-primary drop-shadow-lg">
                     {loginProfile ? 'Enter PIN' : isCreating ? 'New Player' : 'Who is playing?'}
                 </h1>
-                <p className="text-slate-400">
+                <p className="text-slate-400 text-sm">
                     {loginProfile ? `Welcome back, ${loginProfile.name}` : isCreating ? 'Set up your profile' : 'Select your profile to start'}
                 </p>
             </div>
@@ -184,57 +191,82 @@ export default function ProfileSelector() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0, filter: "blur(4px)" }}
-                            className="col-start-1 row-start-1 space-y-4 w-full"
+                            className="col-start-1 row-start-1 space-y-4 w-full flex flex-col"
                         >
-                            {profiles.map(profile => (
-                                <motion.div
-                                    key={profile.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    className="group relative"
+                            <div className="flex flex-col gap-3 sticky top-0 z-10 bg-slate-900/90 pb-2 backdrop-blur-sm -mx-2 px-2 pt-2">
+                                <button
+                                    onClick={() => setIsCreating(true)}
+                                    className="w-full py-3 border border-game-primary/30 bg-game-primary/10 rounded-xl text-game-primary font-bold hover:bg-game-primary hover:text-white transition-all flex items-center justify-center gap-2 shadow-sm"
                                 >
-                                    <button
-                                        onClick={() => handleSelectProfileClick(profile)}
-                                        className="w-full p-4 bg-game-card hover:bg-slate-700 border border-white/5 hover:border-game-primary/50 rounded-2xl flex items-center gap-4 transition-all shadow-lg active:scale-98"
-                                    >
-                                        <div className="w-12 h-12 bg-gradient-to-br from-game-primary to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-inner relative">
-                                            {profile.name[0].toUpperCase()}
-                                            {profile.pin && (
-                                                <div className="absolute -bottom-1 -right-1 bg-slate-800 rounded-full p-1 border-2 border-slate-800">
-                                                    <Lock size={10} className="text-game-primary" />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="flex-1 text-left">
-                                            <h3 className="text-xl font-bold text-white mb-1">{profile.name}</h3>
-                                            {(() => {
-                                                const { level } = getLevelInfo(profile);
-                                                return (
-                                                    <div className="flex flex-col gap-1">
-                                                        <div className="flex gap-3 text-xs font-bold uppercase tracking-wide opacity-80">
-                                                            <span className="text-purple-300">
-                                                                Level {level}
-                                                            </span>
-                                                            <span className="text-orange-300">
-                                                                🔥 {profile.streak || 0} Streak
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })()}
-                                        </div>
-                                    </button>
+                                    <UserPlus size={20} />
+                                    Create New Profile
+                                </button>
 
-                                </motion.div>
-                            ))}
-                            <button
-                                onClick={() => setIsCreating(true)}
-                                className="w-full py-4 border-2 border-dashed border-slate-700 rounded-2xl text-slate-500 font-bold hover:border-game-primary/50 hover:text-game-primary hover:bg-game-primary/5 transition-all flex items-center justify-center gap-2"
+                                {profiles.length > 0 && (
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Search size={16} className="text-slate-500" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Search profiles..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:border-game-primary focus:ring-1 focus:ring-game-primary transition-colors"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            <motion.div
+                                key="userList"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 20 }}
+                                className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2"
                             >
-                                <UserPlus size={24} />
-                                Create New Profile
-                            </button>
+                                {filteredProfiles.length === 0 ? (
+                                    <div className="col-span-1 border-2 border-dashed border-slate-700/50 rounded-xl p-8 text-center text-slate-500">
+                                        No profiles found.
+                                    </div>
+                                ) : (
+                                    filteredProfiles.map(profile => (
+                                        <motion.div
+                                            key={profile.id}
+                                            whileHover={{ scale: 1.01 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            className="relative flex items-center h-full"
+                                        >
+                                            <button
+                                                onClick={() => handleSelectProfileClick(profile)}
+                                                className="w-full h-full text-left bg-slate-800 rounded-xl p-3 transition-all border border-white/5 hover:border-game-primary/50 flex items-center gap-3 group shadow-sm"
+                                            >
+                                                <div className="w-10 h-10 bg-gradient-to-br from-game-primary to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner relative shrink-0">
+                                                    {profile.name[0].toUpperCase()}
+                                                    {profile.pin && (
+                                                        <div className="absolute -bottom-1 -right-1 bg-slate-800 rounded-full p-0.5 border border-slate-800">
+                                                            <Lock size={10} className="text-game-primary" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 text-left min-w-0">
+                                                    <h3 className="text-base font-bold text-white mb-0.5 truncate leading-tight">{profile.name}</h3>
+                                                    {(() => {
+                                                        const { level } = getLevelInfo(profile);
+                                                        return (
+                                                            <div className="flex gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-wide opacity-80 truncate">
+                                                                <span className="text-purple-300">Level {level}</span>
+                                                                <span className="text-slate-500">•</span>
+                                                                <span className="text-orange-300">🔥 {profile.streak || 0}</span>
+                                                            </div>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            </button>
+                                        </motion.div>
+                                    ))
+                                )}
+                            </motion.div>
                         </motion.div>
                     )}
                 </AnimatePresence>
